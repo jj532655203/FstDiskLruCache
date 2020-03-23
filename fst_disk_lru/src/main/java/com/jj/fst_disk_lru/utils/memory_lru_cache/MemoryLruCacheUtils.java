@@ -8,12 +8,11 @@ import androidx.collection.LruCache;
 
 import com.google.gson.Gson;
 
-import java.io.Serializable;
 
 public class MemoryLruCacheUtils {
 
     private static final String TAG = "MemoryLruCacheUtils";
-    private static LruCache<String, Serializable> lruCache;
+    private static LruCache<String, Object> lruCache;
     private static MemoryLruCacheUtils instance;
     private static Gson gson;
     private static int MAX_SIZE = getMemoryCacheSize();
@@ -26,8 +25,8 @@ public class MemoryLruCacheUtils {
     private MemoryLruCacheUtils() {
         gson = new Gson();
         try {
-            lruCache = new LruCache<String, Serializable>(MAX_SIZE) {
-                protected int sizeOf(@NonNull String paramString, @NonNull Serializable serializable) {
+            lruCache = new LruCache<String, Object>(MAX_SIZE) {
+                protected int sizeOf(@NonNull String paramString, @NonNull Object serializable) {
 
                     return gson.toJson(serializable).length() / 1024;
                 }
@@ -52,7 +51,7 @@ public class MemoryLruCacheUtils {
         return memorySize;
     }
 
-    public void put(String key, Serializable serializable) {
+    public void put(String key, Object serializable) {
         if (TextUtils.isEmpty(key)) return;
 
         if (serializable == null) {
@@ -63,7 +62,7 @@ public class MemoryLruCacheUtils {
         lruCache.put(key, serializable);
     }
 
-    public Serializable get(String key) {
+    public Object get(String key) {
         if (TextUtils.isEmpty(key)) return null;
         return lruCache.get(key);
     }
