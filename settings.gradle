@@ -1,0 +1,2 @@
+include ':app', ':fst_disk_lru'
+rootProject.name='FstDiskLruCache'
