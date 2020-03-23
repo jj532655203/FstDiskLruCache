@@ -40,11 +40,10 @@ public class DiskLruCacheUtils {
     private static DiskLruCacheUtils instance;
     private DiskLruCache mDiskLruCache;
 
-    private static String DISK_LRU_CACHE_DIR;
-    private static long MAX_SIZE;
+    private static long MAX_SIZE = 1024 * 1024 * 1024;
 
-    public static void init(String diskLruCacheDir, long maxSize) {
-        DISK_LRU_CACHE_DIR = diskLruCacheDir;
+    public static void setMaxSize(int maxSize) {
+        if (maxSize < 1024 * 1024 * 50) return;
         MAX_SIZE = maxSize;
     }
 
@@ -57,7 +56,7 @@ public class DiskLruCacheUtils {
     }
 
     private File getDiskCacheDir() {
-        String diskLruDirPath = Utils.getApp().getFilesDir().getAbsolutePath() + File.separator + DISK_LRU_CACHE_DIR;
+        String diskLruDirPath = Utils.getApp().getFilesDir().getAbsolutePath() + File.separator + "disk_lru_cache";
         File diskDir = new File(diskLruDirPath);
         if (!diskDir.exists()) {
             diskDir.mkdirs();
@@ -285,7 +284,7 @@ public class DiskLruCacheUtils {
         }
 
         List<File> unzipFileList;
-        String destDirPath = Utils.getApp().getFilesDir().getAbsolutePath() + File.separator + DISK_LRU_CACHE_DIR;
+        String destDirPath = getDiskCacheDir().getAbsolutePath();
         try {
             //缓存bookZip包,耗时所在eg:<<英语测试卷>>40s
             DiskLruCacheUtils.getInstance().writeFile(zipFileUrl, inputStream);

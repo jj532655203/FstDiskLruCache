@@ -36,5 +36,6 @@ dependencies {
 
     implementation 'de.ruedigermoeller:fst:2.56'
     implementation 'com.blankj:utilcode:1.25.5'
+    implementation "com.google.code.gson:gson:2.8.6"
 
 }
