@@ -1,4 +1,6 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+group = 'com.github.jj532655203'
 
 android {
     compileSdkVersion 28
@@ -31,4 +33,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+    implementation 'de.ruedigermoeller:fst:2.56'
+    implementation 'com.blankj:utilcode:1.25.5'
+
 }
