@@ -1,4 +1,4 @@
-package com.jj.fst_disk_lru.utils.disk_lru_cache;
+package com.jj.fst_disk_lru.disk_lru_cache;
 /*
  * Copyright (C) 2011 The Android Open Source Project
  *

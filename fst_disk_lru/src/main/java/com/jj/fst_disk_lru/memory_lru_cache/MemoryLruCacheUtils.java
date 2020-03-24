@@ -1,4 +1,4 @@
-package com.jj.fst_disk_lru.utils.memory_lru_cache;
+package com.jj.fst_disk_lru.memory_lru_cache;
 
 import android.text.TextUtils;
 import android.util.Log;

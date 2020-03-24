@@ -1,4 +1,4 @@
-package com.jj.fst_disk_lru.utils.disk_lru_cache;
+package com.jj.fst_disk_lru.disk_lru_cache;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,9 +9,10 @@ import android.util.Log;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.Utils;
 import com.blankj.utilcode.util.ZipUtils;
-import com.jj.fst_disk_lru.utils.FSTUtils;
 import com.jj.fst_disk_lru.utils.IOUtils;
 import com.jj.fst_disk_lru.utils.Md5Utils;
+
+import org.nustaq.serialization.FSTConfiguration;
 
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
@@ -41,6 +42,7 @@ public class DiskLruCacheUtils {
     private DiskLruCache mDiskLruCache;
 
     private static long MAX_SIZE = 1024 * 1024 * 1024;
+    private final FSTConfiguration fstConfiguration;
 
     public static void setMaxSize(int maxSize) {
         if (maxSize < 1024 * 1024 * 50) return;
@@ -48,6 +50,7 @@ public class DiskLruCacheUtils {
     }
 
     private DiskLruCacheUtils() {
+        fstConfiguration = FSTConfiguration.createDefaultConfiguration();
         try {
             mDiskLruCache = DiskLruCache.open(getDiskCacheDir(), 1, 1, MAX_SIZE);
         } catch (IOException e) {
@@ -213,11 +216,8 @@ public class DiskLruCacheUtils {
             DiskLruCache.Snapshot snapshot = mDiskLruCache.get(key);
             if (snapshot != null) {
                 inputStream = (FileInputStream) snapshot.getInputStream(0);
-//                FileDescriptor fd = inputStream.getFD();
-//                FileReader fileReader = new FileReader(fd);
-//                BufferedReader bufferedReader = new BufferedReader(fileReader);
-//                drawPathJson = bufferedReader.readLine();
-                result = FSTUtils.getInstance().readObjectFromStream(inputStream, clazz);
+                byte[] bytes = IOUtils.readStreamAsBytesArray(inputStream);
+                result = (T) fstConfiguration.asObject(bytes);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -245,9 +245,8 @@ public class DiskLruCacheUtils {
             DiskLruCache.Editor edit = mDiskLruCache.edit(key);
             if (edit != null) {
                 outputStream = edit.newOutputStream(0);
-//                outputStream.write(object.getBytes());
-//                outputStream.flush();
-                FSTUtils.getInstance().writeObject2Stream(outputStream, object, possibles);
+                outputStream.write(fstConfiguration.asByteArray(object));
+                outputStream.flush();
                 edit.commit();
                 mDiskLruCache.flush();
             }
