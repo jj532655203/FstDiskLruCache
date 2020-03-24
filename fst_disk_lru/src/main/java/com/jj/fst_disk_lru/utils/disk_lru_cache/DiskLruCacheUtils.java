@@ -228,7 +228,10 @@ public class DiskLruCacheUtils {
         return result;
     }
 
-    public <T> void put(String ossImgPath, T object, Class<T> clazz) {
+    /**
+     * @param possibles 可不填;可以加速序列化2倍!object的类名,如果是集合则把集合的类名也传进来
+     */
+    public void put(String ossImgPath, Object object, Class... possibles) {
 
         if (Looper.getMainLooper() == Looper.myLooper()) {
             Log.e(TAG, "不能在主线程操作DiskLruCache");
@@ -244,7 +247,7 @@ public class DiskLruCacheUtils {
                 outputStream = edit.newOutputStream(0);
 //                outputStream.write(object.getBytes());
 //                outputStream.flush();
-                FSTUtils.getInstance().writeObject2Stream(outputStream, object, clazz);
+                FSTUtils.getInstance().writeObject2Stream(outputStream, object, possibles);
                 edit.commit();
                 mDiskLruCache.flush();
             }

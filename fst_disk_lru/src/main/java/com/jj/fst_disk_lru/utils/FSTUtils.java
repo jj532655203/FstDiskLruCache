@@ -60,17 +60,15 @@ public class FSTUtils {
 
     /**
      * 序列化
+     *
+     * @param stream    该输出流携带的数据必须是对象转byte数组,不能是jsonString
+     * @param possibles 可不填;可以加速序列化2倍!object的类名,如果是集合则把集合的类名也传进来
      */
-    public <T> void writeObject2Stream(OutputStream stream, Object object, Class<T> clazz) throws IOException {
-        if (!object.getClass().isAssignableFrom(clazz)) {
-            Log.e(TAG, "writeObject2Stream object 非法!");
-            return;
-        }
-
+    public void writeObject2Stream(OutputStream stream, Object object, Class... possibles) throws IOException {
         Log.d(TAG, "writeObject2Stream");
 
         FSTObjectOutput out = confInstance.getObjectOutput(stream);
-        out.writeObject(object, clazz);
+        out.writeObject(object, possibles);
 // DON'T out.close() when using factory method;
         out.flush();
         stream.close();
